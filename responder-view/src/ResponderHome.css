@@ -1,0 +1,11 @@
+.home {
+    padding: 30px;
+    background-color: floralwhite;
+}
+
+.request {
+    align-items: center;
+    display: flex;
+    font-size: 18px;
+    justify-content: space-between;
+}
