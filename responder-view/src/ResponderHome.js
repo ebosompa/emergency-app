@@ -8,10 +8,16 @@ function Request({ request, index, markAsComplete, deleteRequest }) {
     return (
         <div className="request">
             <span style={{ textDecoration: request.isComplete ? "line-through" : ""}}>
-                {request.text}
+                {request.longitude}
             </span>
             <span style={{ textDecoration: request.isComplete ? "line-through" : ""}}>
-                <a href={request.linktext} target="_blank">Get Location Through Google Maps</a> 
+                {request.latitude}
+            </span>
+            <span style={{ textDecoration: request.isComplete ? "line-through" : ""}}>
+                <a href={
+                    "https://www.google.com/maps/search/?api=1&query=" +
+                    request.latitude + "%2C" + request.longitude
+                    } target="_blank">Get Location Through Google Maps</a> 
             </span>
             <div>
                 <Button variant="outline-success" onClick={() =>
@@ -24,20 +30,19 @@ function Request({ request, index, markAsComplete, deleteRequest }) {
 }
 
 function ResponderHome(){
-    const [requests, setRequests] = React.useState([
-        {
-            text: "Location 1",
-            linktext: "https://www.google.com",
-            isComplete: false
-        }
-    ]);
+    const [requests, setRequests] = React.useState([{"":"", "":""}]);
 
     React.useEffect(() => {
-        fetch("http://localhost:5000/emergencyLoc")
+        fetch("http://localhost:5000/emergencyLoc",
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json", 
+                "Access-Control-Allow-Origin":"*"
+            },
+        })
           .then(results => results.json())
-          .then(data => {
-            setRequests(data.requests);
-          });
+          .then(data => setRequests(Object.values(data)));
       }, []);
 
     const markAsComplete = index => {
@@ -51,7 +56,6 @@ function ResponderHome(){
         newRequests.splice(index, 1);
         setRequests(newRequests);
     };
-    const list = ['a', 'b', 'c'];
     return (
         <div className="home">
             <div className="container">
