@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -30,6 +31,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnSendAlert;
@@ -122,9 +128,9 @@ public class MainActivity extends AppCompatActivity {
     private void sendInfo() {
         String android_id = Settings.Secure.getString(getApplicationContext()
                 .getContentResolver(), Settings.Secure.ANDROID_ID);
-        // TODO: send the recording, location, and id to the server
-        // you can get the absolute path from audio.getAbsolutePath
-        // id and location are global variables
+        new CallAPI(android_id, String.valueOf(currentLocation.getLatitude()),
+                String.valueOf(currentLocation.getLongitude())).execute();
+
     }
 
     protected void addRecordingToMediaLibrary() {
@@ -140,4 +146,43 @@ public class MainActivity extends AppCompatActivity {
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
         Toast.makeText(this, "Added File " + newUri, Toast.LENGTH_LONG).show();
     }
+
+    public class CallAPI extends AsyncTask<String, String, String> {
+
+        String id;
+        String latitude;
+        String longitude;
+
+        public CallAPI(String android_id, String lat, String longi){
+            id = android_id;
+            latitude = lat;
+            longitude = longi;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            OkHttpClient client = new OkHttpClient();
+            RequestBody formBody = new FormBody.Builder()
+                    .add("id", id)
+                    .add("latitude", latitude)
+                    .add("longitude", longitude)
+                    .build();
+            Request request = new Request.Builder()
+                    .url("https://httpbin.org/anything") // The URL to send the data to
+                    .post(formBody)
+                    .build();
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+    }
 }
+
