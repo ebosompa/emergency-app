@@ -36,10 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
     private MediaRecorder recorder;
     private File audio = null;
+    private Location currentLocation;
     private boolean callForHelp = false;
-    private String android_id = Settings.Secure.getString(getApplicationContext()
-            .getContentResolver(), Settings.Secure.ANDROID_ID);
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_LONG).show();
                         btnSendAlert.setBackgroundColor(getResources().getColor(R.color.teal_200));
                         btnSendAlert.setText("Stop Recording");
+                        currentLocation = location;
                         startRecording();
-                        sendLocation(location);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -118,7 +116,15 @@ public class MainActivity extends AppCompatActivity {
         recorder.stop();
         recorder.release();
         addRecordingToMediaLibrary();
-        sendRecording();
+        sendInfo();
+    }
+
+    private void sendInfo() {
+        String android_id = Settings.Secure.getString(getApplicationContext()
+                .getContentResolver(), Settings.Secure.ANDROID_ID);
+        // TODO: send the recording, location, and id to the server
+        // you can get the absolute path from audio.getAbsolutePath
+        // id and location are global variables
     }
 
     protected void addRecordingToMediaLibrary() {
@@ -133,13 +139,5 @@ public class MainActivity extends AppCompatActivity {
         Uri newUri = contentResolver.insert(base, values);
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
         Toast.makeText(this, "Added File " + newUri, Toast.LENGTH_LONG).show();
-    }
-
-    private void sendLocation(Location location) {
-        // TODO: send the latitude and longitude to the server
-    }
-
-    private void sendRecording() {
-        // TODO: send the recording to the server
     }
 }
