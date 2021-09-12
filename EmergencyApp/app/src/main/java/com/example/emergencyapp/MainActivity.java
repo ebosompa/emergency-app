@@ -16,12 +16,10 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.CancellationToken;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class MainActivity extends AppCompatActivity {
     Button btnSendAlert;
@@ -50,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Location location) {
                         Toast.makeText(getApplicationContext(), location.toString(), Toast.LENGTH_LONG).show();
+                        btnSendAlert.setBackgroundColor(getResources().getColor(R.color.teal_200));
+                        btnSendAlert.setText("Help called");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
