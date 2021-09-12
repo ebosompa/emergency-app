@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private MediaRecorder recorder;
     private File audio = null;
     private boolean callForHelp = false;
+    private String android_id = Settings.Secure.getString(getApplicationContext()
+            .getContentResolver(), Settings.Secure.ANDROID_ID);
 
 
     @Override
@@ -44,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         btnSendAlert = findViewById(R.id.btnSendAlert);
+        // TODO: request permissions for
+        // <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+        //    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+        //    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+        //    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+        //    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+        //    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+        //    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         btnSendAlert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                         btnSendAlert.setBackgroundColor(getResources().getColor(R.color.teal_200));
                         btnSendAlert.setText("Stop Recording");
                         startRecording();
-                        makePostRequest(location);
+                        sendLocation(location);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -108,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         recorder.stop();
         recorder.release();
         addRecordingToMediaLibrary();
+        sendRecording();
     }
 
     protected void addRecordingToMediaLibrary() {
@@ -124,7 +135,11 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "Added File " + newUri, Toast.LENGTH_LONG).show();
     }
 
-    private void makePostRequest(Location location) {
-        String android_id = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+    private void sendLocation(Location location) {
+        // TODO: send the latitude and longitude to the server
+    }
+
+    private void sendRecording() {
+        // TODO: send the recording to the server
     }
 }
