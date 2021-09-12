@@ -28,7 +28,7 @@ class Sounds {
             this.audio = [sound];
         }
         else {
-            this.audio.append(sound);
+            this.audio.push(sound);
         }
     }
 }
@@ -43,7 +43,7 @@ const addLocation =  (locationItems)=> {
         AllLocations[locationItems.identifier].longitude = locationItems.longitude;
         AllLocations[locationItems.identifier].latitude = locationItems.latitude;
         AllLocations[locationItems.identifier].timestamp = locationItems.timestamp;
-        AllLocations[locationItems.identifier].addAudio(locationItems.audio);
+        AllLocations[locationItems.identifier].userAudios.addAudio(locationItems.audio);
     }
 
     console.log("gotten location:")
@@ -78,9 +78,9 @@ app.post('/sendLocation', (req,res) => {
     console.table(req.body);
     addLocation(req.body);
     console.log(AllLocations);
+
+    res.send("Gotten data tenk yew!!!")
 })
-
-
 
 app.listen(3000, ()=> {
     console.log("Listening on port 3000");
